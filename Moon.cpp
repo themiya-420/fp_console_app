@@ -41,9 +41,35 @@ void saveRoomsToFile(const vector<Room>& rooms);
 vector<Room> rooms;
 vector<Booking> bookings;
 
+
+bool login(const std::string& username, const std::string& password) {
+    if (username == "admin" && password == "admin") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void handleLogin() {
+    std::string username_input, password_input;
+
+    std::cout << "Enter username: ";
+    std::cin >> username_input;
+
+    std::cout << "Enter password: ";
+    std::cin >> password_input;
+
+    if (login(username_input, password_input)) {
+        std::cout << "Login successful!" << std::endl;
+        displayMainMenu();
+    } else {
+        std::cout << "Login failed. Incorrect username or password." << std::endl;
+    }
+}
+
 int main()
 {
-    displayMainMenu();
+    handleLogin();
    
 }
 
