@@ -30,6 +30,7 @@ void displayMainMenu();
 void displayRoomManagementMenu();
 void displayBookingManagementMenu();
 void displayBookings();
+void deleteRoom();
 void bookRoom();
 void viewRooms();
 void searchRoomById();
@@ -132,8 +133,9 @@ void displayRoomManagementMenu()
     cout << "===== Room Management =====\n";
     cout << "1. Add Room\n";
     cout << "2. View Rooms\n";
-    cout << "3. Search room by ID\n";
-    cout << "4. Go Back To Main Menu\n";
+    cout << "3. Delete Rooms\n";
+    cout << "4. Search room by ID\n";
+    cout << "5. Go Back To Main Menu\n";
     
      
     do {
@@ -148,9 +150,12 @@ void displayRoomManagementMenu()
                 viewRooms();
                 break;
             case 3:
-                searchRoomById();
+               deleteRoom();
                 break;
             case 4:
+            	searchRoomById();
+                break;
+            case 5:
                 cout << "Going Back to main menu...\n";
                 
                 displayMainMenu();
@@ -246,6 +251,48 @@ void searchRoomById() {
             cout << "Room not found.\n";
         }
         inFile.close();
+    } else {
+        cout << "Error: Unable to open file for reading.\n";
+    }
+}
+
+// Function to delete the room details
+void deleteRoom() {
+    string deleteId;
+    cout << "Enter the Room ID to delete: ";
+    cin >> deleteId;
+
+    ifstream inFile("rooms.txt");
+    if (inFile.is_open()) {
+        vector<string> lines;
+        string line;
+        bool found = false;
+        while (getline(inFile, line)) {
+            stringstream ss(line);
+            string id, type, availability, priceStr;
+            getline(ss, id, ',');
+            if (id == deleteId) {
+                found = true;
+                continue; // Skip this line (don't add it to lines vector)
+            }
+            lines.push_back(line); // Add this line to lines vector
+        }
+        inFile.close();
+
+        if (found) {
+            ofstream outFile("rooms.txt");
+            if (outFile.is_open()) {
+                for (const string& line : lines) {
+                    outFile << line << endl; // Write lines back to file
+                }
+                outFile.close();
+                cout << "Room with ID " << deleteId << " deleted successfully.\n";
+            } else {
+                cout << "Error: Unable to open file for writing.\n";
+            }
+        } else {
+            cout << "Room with ID " << deleteId << " not found.\n";
+        }
     } else {
         cout << "Error: Unable to open file for reading.\n";
     }
